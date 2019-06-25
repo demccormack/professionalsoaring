@@ -1,0 +1,11 @@
+html {
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-image: url("bg.jpg");
+    background-size: cover;
+    background-position: center center;
+}
+
+h1, form {
+    text-align: center;
+}
