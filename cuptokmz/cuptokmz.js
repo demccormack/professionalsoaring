@@ -59,31 +59,34 @@ function convertFile(){
 
         //output to browser for debugging
         document.getElementById('output').innerHTML = kml.join('<br>');//.substring(0,1200);
+
+
+        function writeFolder(idxArray, strFolderName, strIconPath){
+            kml.push('<Style id="' + strFolderName + '">')
+            kml.push('<IconStyle>');
+            kml.push('<Icon>');
+            kml.push('<href>' + strIconPath + '</href>');
+            kml.push('</Icon>');
+            kml.push('</IconStyle>');
+            kml.push('</Style>');
+            
+            kml.push('<Folder>');
+            kml.push('<name>' + strFolderName + '</name>');
+            for (var i = 0; i < idxArray.length; i++){
+                var index = idxArray[i];
+                kml.push('<Placemark>');
+                kml.push('<name>' + cups2d[index][0] + '</name>');
+                kml.push('<description>' + cups2d[index][10] + '</description>');
+                kml.push('<styleUrl>#' + strFolderName + '</styleUrl>');
+                kml.push('<Point>');
+                kml.push('<coordinates>NO COORDINATES</coordinates>'); //needs conversion
+                kml.push('</Point>');
+                kml.push('</Placemark>');
+            }
+            kml.push('</Folder>');
+        }
     }
     reader.readAsText(files[0]);
 }
 
-function writeFolder(idxArray, strFolderName, strIconPath){
-    kml.push('<Style id="' + strFolderName + '">')
-    kml.push('<IconStyle>');
-    kml.push('<Icon>');
-    kml.push('<href>' + strIconPath + '</href>');
-    kml.push('</Icon>');
-    kml.push('</IconStyle>');
-    kml.push('</Style>');
-    
-    kml.push('<Folder>');
-    kml.push('<name>' + strFolderName + '</name>');
-    for (var i = 0; i < idxArray.length; i++){
-        var index = idxArray[i];
-        kml.push('<Placemark>');
-        kml.push('<name>' + cups2d[index][0] + '</name>');
-        kml.push('<description>' + cups2d[index][10] + '</description>');
-        kml.push('<styleUrl>#' + strFolderName + '</styleUrl>');
-        kml.push('<Point>');
-        kml.push('<coordinates>NO COORDINATES</coordinates>'); //needs conversion
-        kml.push('</Point>');
-        kml.push('</Placemark>');
-    }
-    kml.push('</Folder>');
-}
+
