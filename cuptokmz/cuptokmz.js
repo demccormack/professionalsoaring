@@ -3,7 +3,7 @@ function convertFile(){
     var reader = new FileReader();
 
     reader.onload = function(){
-        var cup = reader.result.replace('&','and');
+        var cup = reader.result.replace(/&/g,'and');
         var cups1d = cup.split('\n'); //this is a 1D array
         
         //index numbers of waypoints sorted by type
@@ -44,22 +44,36 @@ function convertFile(){
 
         //build the kml file as an array
         var kml = []
-        kml.push('<?xml version=""1.0"" encoding=""UTF-8""?>');
-        kml.push('<kml xmlns=""http://www.opengis.net/kml/2.2"">');
+        kml.push('<?xml version="1.0" encoding="UTF-8"?>');
+        kml.push('<kml xmlns="http://www.opengis.net/kml/2.2">');
         kml.push('<Document>');    
-        
         writeFolder(idxLandouts,'Landouts','IconWindsock.png');
         writeFolder(idxTurnpoints,'Turnpoints','IconTP.png');
         writeFolder(idxMtnPasses, 'Mountain Passes', 'IconMtnPass.png');
         writeFolder(idxMtnTops, 'Mountain Tops', 'IconMtnTop.png');
         writeFolder(idxReportPt,'Reporting Points', 'IconRepPt.png');
-
         kml.push('</Document>');
         kml.push('</kml>')
 
-        //output to browser for debugging
-        document.getElementById('output').innerHTML = kml.join('<br>');//.substring(0,1200);
+        //add new line characters
+        for (var i = 0; i < kml.length; i++){
+            kml[i] += '\n';
+        }
 
+        //get the user to download the kml file
+        var blb = new Blob(kml, {type : 'text/xml'});
+        const tmpURL = window.URL.createObjectURL(blb);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = tmpURL;
+        a.download = 'result.kml';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(tmpURL);
+        alert('Done!');
+
+
+        /////////////////////// FUNCTIONS ///////////////////////////
 
         function writeFolder(idxArray, strFolderName, strIconPath){
             kml.push('<Style id="' + strFolderName + '">')
