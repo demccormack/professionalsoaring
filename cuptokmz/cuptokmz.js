@@ -1,5 +1,8 @@
+//for information on cup file format, see http://download.naviter.com/docs/CUP-file-format-description.pdf
+
 function convertFile(){
     var files = document.getElementById('fileinput').files;
+    var cupname = files[0].name;
     var reader = new FileReader();
 
     reader.onload = function(){
@@ -16,31 +19,36 @@ function convertFile(){
         //next split the elements on , to make a 2D array
         var cups2d = [];
 
-        //Build indexes so the waypoints can be sorted by type
+        //Build indexes so the waypoints can be sorted by type.
+        //Lines which are not waypoints, e.g. the first line, will be skipped.
         for (var i = 0; i < cups1d.length; i++){
             cups2d[i] = cups1d[i].split(',');
             switch(cups2d[i][6]){
-                case '1': addtoTurnpoints(); break;
-                case '2': addtoLandouts(); break;
-                case '3': addtoLandouts(); break;
-                case '4': addtoLandouts(); break;
-                case '5': addtoLandouts(); break;
-                case '6': idxMtnPasses.push(i); break;
-                case '7': idxMtnTops.push(i); break;
-                case '8': addtoTurnpoints(); break;
-                case '9': addtoTurnpoints(); break;
-                case '10': addtoTurnpoints(); break;
-                case '11': addtoTurnpoints(); break;
-                case '12': addtoTurnpoints(); break;
-                case '13': addtoTurnpoints(); break;
-                case '14': addtoTurnpoints(); break;
-                case '15': addtoTurnpoints(); break;
-                case '16': addtoTurnpoints(); break;
-                case '17': idxReportPt.push(i); break;
+                case '0': addtoTurnpoints(); break;             //Unknown
+                case '1': addtoTurnpoints(); break;             //Waypoint
+                case '2': addtoLandouts(); break;               //Airfield with grass runway
+                case '3': addtoLandouts(); break;               //Outlanding
+                case '4': addtoLandouts(); break;               //Gliding airfield
+                case '5': addtoLandouts(); break;               //Airfield with solid runway
+                case '6': idxMtnPasses.push(i); break;          //Mountain pass
+                case '7': idxMtnTops.push(i); break;            //Mountain top
+                case '8': addtoTurnpoints(); break;             //Transmitter mast
+                case '9': addtoTurnpoints(); break;             //VOR
+                case '10': addtoTurnpoints(); break;            //NDB
+                case '11': addtoTurnpoints(); break;            //Cooling tower
+                case '12': addtoTurnpoints(); break;            //Dam
+                case '13': addtoTurnpoints(); break;            //Tunnel
+                case '14': addtoTurnpoints(); break;            //Bridge
+                case '15': addtoTurnpoints(); break;            //Power plant
+                case '16': addtoTurnpoints(); break;            //Castle
+                case '17': idxReportPt.push(i); break;          //Intersection  //used in NZ for VFR reporting points
             }
             function addtoLandouts(){idxLandouts.push(i);}
             function addtoTurnpoints(){idxTurnpoints.push(i);}
         }
+
+        var wpCount = 0;
+        var failCount = 0;
 
         //build the kml file as an array
         var kml = []
@@ -66,14 +74,19 @@ function convertFile(){
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = tmpURL;
-        a.download = 'result.kml';
+        a.download = cupname.replace('.cup', '') + '.kml';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(tmpURL);
-        alert('Done!');
+        
+        report('File conversion successful! ' + wpCount + ' waypoints converted, ' + failCount + ' skipped.');
 
 
-        /////////////////////// FUNCTIONS ///////////////////////////
+        /////////////////////// FUNCTIONS ///////////////////////
+
+        function report(strMsg){
+            document.getElementById('output').innerHTML += strMsg + '<br>';
+        }
 
         function writeFolder(idxArray, strFolderName, strIconPath){
             kml.push('<Style id="' + strFolderName + '">')
@@ -99,9 +112,11 @@ function convertFile(){
                     newPt.push('</Point>');
                     newPt.push('</Placemark>');
                     Array.prototype.push.apply(kml, newPt);
+                    wpCount++
                 } 
                 catch (error) {
-                    alert('Error: point "' + cups2d[index][0] + '" will be omitted');
+                    report('Error! Point skipped: ' + cups2d[index][0]);
+                    failCount++
                 }
             }
             kml.push('</Folder>');
@@ -133,5 +148,9 @@ function convertFile(){
             return (magnitude * sign);
         }
     }
+
+
+
+
     reader.readAsText(files[0]);
 }
