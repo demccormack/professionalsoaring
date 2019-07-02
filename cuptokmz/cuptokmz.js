@@ -87,20 +87,51 @@ function convertFile(){
             kml.push('<Folder>');
             kml.push('<name>' + strFolderName + '</name>');
             for (var i = 0; i < idxArray.length; i++){
-                var index = idxArray[i];
-                kml.push('<Placemark>');
-                kml.push('<name>' + cups2d[index][0] + '</name>');
-                kml.push('<description>' + cups2d[index][10] + '</description>');
-                kml.push('<styleUrl>#' + strFolderName + '</styleUrl>');
-                kml.push('<Point>');
-                kml.push('<coordinates>NO COORDINATES</coordinates>'); //needs conversion
-                kml.push('</Point>');
-                kml.push('</Placemark>');
+                var newPt = [];
+                try {
+                    var index = idxArray[i];
+                    newPt.push('<Placemark>');
+                    newPt.push('<name>' + cups2d[index][0] + '</name>');
+                    newPt.push('<description>' + cups2d[index][10] + '</description>');
+                    newPt.push('<styleUrl>#' + strFolderName + '</styleUrl>');
+                    newPt.push('<Point>');
+                    newPt.push('<coordinates>' + convertLatLong(cups2d[index][4]) + ', ' + convertLatLong(cups2d[index][3]) + '</coordinates>');
+                    newPt.push('</Point>');
+                    newPt.push('</Placemark>');
+                    Array.prototype.push.apply(kml, newPt);
+                } 
+                catch (error) {
+                    alert('Error: point "' + cups2d[index][0] + '" will be omitted');
+                }
             }
             kml.push('</Folder>');
+        }
+
+        function convertLatLong(cupLatOrLong){
+            var sign, deg, min, limit;
+            switch (cupLatOrLong.charAt(cupLatOrLong.length - 1)){
+                case 'N': sign = 1; isLat(); break;
+                case 'E': sign = 1; isLong(); break;
+                case 'S': sign = -1; isLat(); break;
+                case 'W': sign = -1; isLong(); break;
+                throw 'Latitude or longitude ' + cupLatOrLong + ' invalid!'
+            }
+            function isLat(){
+                deg = cupLatOrLong.substring(0, 2);
+                min = cupLatOrLong.substring(2, cupLatOrLong.length - 1);
+                limit = 90;
+            }
+            function isLong(){
+                deg = cupLatOrLong.substring(0, 3);
+                min = cupLatOrLong.substring(3, cupLatOrLong.length - 1);
+                limit = 180;
+            }
+            var magnitude = Number(deg) + Number(min / 60);
+            if (magnitude > limit){
+                throw 'Latitude or longitude ' + cupLatOrLong + ' invalid!';
+            }
+            return (magnitude * sign);
         }
     }
     reader.readAsText(files[0]);
 }
-
-
