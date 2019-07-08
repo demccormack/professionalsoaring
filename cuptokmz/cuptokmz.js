@@ -96,7 +96,7 @@ function convertFile(){
             }
             xhr.open ('GET', iconUrl);
             xhr.responseType = 'arraybuffer';
-            xhr.send(null);
+            xhr.send();
         }
 
         function finishAndDownload(){
@@ -119,7 +119,7 @@ function convertFile(){
         }
 
         function writeFolder(idxArray, strFolderName, strIconPath){
-            kml.push('<Style id="' + strFolderName + '">')
+            kml.push('<Style id="' + strFolderName + '">');
             kml.push('<IconStyle>');
             kml.push('<Icon>');
             kml.push('<href>' + strIconPath + '</href>');
