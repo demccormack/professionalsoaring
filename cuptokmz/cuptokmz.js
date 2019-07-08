@@ -68,32 +68,12 @@ function convertFile(){
             kml[i] += '\n';
         }
 
-        //get the user to download the kml file
-        var blb = new Blob(kml, {type : 'text/xml'});
-        const tmpURL = window.URL.createObjectURL(blb);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = tmpURL;
-        a.download = cupname.replace('.cup', '') + '.kml';
-        // document.body.appendChild(a);
-        // a.click();
-        // window.URL.revokeObjectURL(tmpURL);
-
         //make the zip folder
         var zip = new JSZip();
         var kmzname = cupname.replace('.cup', '') + '.kmz';
-        var IconTP, IconWindsock, IconMtnPass, IconMtnTop, IconRepPt;
+        var kmlname = cupname.replace('.cup', '') + '.kml';
+        var iconsInZip = 0;
 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-            if (this.readyState == 4 && this.status == 200){
-                IconTP = new Blob(xhr.response, {type: 'image/png'});
-            }
-        }
-        xhr.open ('GET', 'IconTP.png');
-        xhr.responseType = 'arraybuffer';
-        xhr.send(null);
-        
 
         // $.get('/IconTP.png', function(data){
         //     IconTP = new Blob([data], {type: 'image/png'});
@@ -103,12 +83,34 @@ function convertFile(){
         // $.get('IconMtnPass.png', function(data, status){IconMtnPass = new Blob([data], {type: 'image/png'});});
         // $.get('IconMtnTop.png', function(data, status){IconMtnTop = new Blob([data], {type: 'image/png'});});
         // $.get('IconRepPt.png', function(data, status){IconRepPt = new Blob([data], {type: 'image/png'});});
-        zip.folder(kmzname).file('IconTP.png', IconTP);
-        zip.folder(kmzname).file('IconWindsock.png', IconWindsock);
-        zip.folder(kmzname).file('IconMtnPass.png', IconMtnPass);
-        zip.folder(kmzname).file('IconMtnTop.png', IconMtnTop);
-        zip.folder(kmzname).file('IconRepPt.png', IconRepPt);
-        zip.folder(kmzname).file(a.download, blb);
+        // zip.folder(kmzname).file('IconTP.png', IconTP);
+        // zip.folder(kmzname).file('IconWindsock.png', IconWindsock);
+        // zip.folder(kmzname).file('IconMtnPass.png', IconMtnPass);
+        // zip.folder(kmzname).file('IconMtnTop.png', IconMtnTop);
+        // zip.folder(kmzname).file('IconRepPt.png', IconRepPt);
+        // zip.folder(kmzname).file(a.download, blb);
+
+        zip.file(kmlname, new Blob(kml, {type : 'text/xml'}));
+        addIcon('IconTP.png');
+        addIcon('IconWindsock.png');
+        addIcon('IconMtnPass.png');
+        addIcon('IconMtnTop.png');
+        addIcon('IconRepPt.png');
+
+        function addIcon(iconUrl){
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(){
+                if (this.readyState == 4 && this.status == 200){
+                    var iconBlob = new Blob([this.response], {type: 'image/png'});
+                    zip.file(iconUrl, iconBlob);
+                    iconsInZip++;
+                    if (iconsInZip == 5){finishAndDownload();}
+                    }
+            }
+            xhr.open ('GET', iconUrl);
+            xhr.responseType = 'arraybuffer';
+            xhr.send(null);
+        }
 
         /*
         I'm stuck trying to import image data into blobs in memory in order to put the icons into the zip. Ideas:
@@ -117,24 +119,42 @@ function convertFile(){
             -8/7/19 trying with XmlHttpRequest, setting responseType = 'arraybuffer'
         2. Put hidden <img> tags in the html with src set to the icon URL. Access these using getElementById().
             Problems: can the raw data be accessed like this? Does a img element have a .files property?
+
+        EDIT 8/7/19: the reason $.get appeared to return no data is because it is ASYNC. I was looking for the data 
+        before the requests had completed.
         */
 
-        var kmzBlob = new Blob([zip], {type: 'application/zip'});
-        //test whether pngs are being imported correctly
-        const urlb = window.URL.createObjectURL(IconTP);
-        const b = document.createElement('a');
-        b.style.display = 'none';
-        b.href = urlb;
-        b.download = "IconTP.png";
-        document.body.appendChild(b);
-        b.click();
-        window.URL.revokeObjectURL(urlb);
+        // var kmzBlob = new Blob([zip], {type: 'application/zip'});
+        // //test whether pngs are being imported correctly
+        // const urlb = window.URL.createObjectURL(IconTP);
+        // const b = document.createElement('a');
+        // b.style.display = 'none';
+        // b.href = urlb;
+        // b.download = "IconTP.png";
+        // document.body.appendChild(b);
+        // b.click();
+        // window.URL.revokeObjectURL(urlb);
 
         
-        report('File conversion successful! ' + wpCount + ' waypoints converted, ' + failCount + ' skipped.');
+        
 
 
         /////////////////////// FUNCTIONS ///////////////////////
+
+        function finishAndDownload(){
+            //finish building the zip and give it to the user
+            zip.generateAsync({type:"blob"}).then(function(blob){
+                const tmpURL = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = tmpURL;
+                a.download = kmzname;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(tmpURL);
+            });
+            report('File conversion successful! ' + wpCount + ' waypoints converted, ' + failCount + ' skipped.');
+        }
 
         function report(strMsg){
             document.getElementById('output').innerHTML += strMsg + '<br>';
@@ -163,12 +183,12 @@ function convertFile(){
                     newPt.push('<coordinates>' + convertLatLong(cups2d[index][4]) + ', ' + convertLatLong(cups2d[index][3]) + '</coordinates>');
                     newPt.push('</Point>');
                     newPt.push('</Placemark>');
-                    Array.prototype.push.apply(kml, newPt);
-                    wpCount++
+                    Array.prototype.push.apply(kml, newPt);     //do this last so that any errors will cause the point to be skipped
+                    wpCount++;
                 } 
                 catch (error) {
                     report('Error! Point skipped: ' + cups2d[index][0]);
-                    failCount++
+                    failCount++;
                 }
             }
             kml.push('</Folder>');
