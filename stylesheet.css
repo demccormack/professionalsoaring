@@ -6,6 +6,11 @@ html {
     background-position: center center;
 }
 
-h1, form, p {
+h1, form {
     text-align: center;
+}
+
+#container {
+    max-width: 65ch;
+    margin: auto;
 }

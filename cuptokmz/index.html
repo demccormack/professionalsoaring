@@ -7,14 +7,23 @@
 </head>
 <body>
     <h1>CUP to KMZ Converter</h1>
+
     <div id="container">
+        <p>.cup files store waypoint data and can be read by most gliding flight computer programs. 
+            One great way to learn an unfamiliar area before you go flying in it, especially if it is mountainous,
+                is to use Google Earth. In the 3D mode, you can fly yourself through a pass, sink down into the 
+                valley, and see your landing area from circuit height. All from your armchair with no adrenaline.
+        </p><p>
+            But Google Earth can't read your cup file, so I wrote this script to convert it to a kmz archive. 
+            You'll need to install the <a href="https://www.google.com/earth/versions/">desktop version</a> of Google Earth.
+        </p>
         <form enctype="multipart/form-data" action="javascript:convertFile()">
             Upload your .cup file: 
             <input type="file" name="cupfile" id="fileinput">
             <br><br>
             <input type="submit">
         </form>
+        <output id="output"></output>
     </div>
-    <output id="output"></output>
 </body>
 </html>
