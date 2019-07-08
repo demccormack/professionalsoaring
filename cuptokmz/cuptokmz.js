@@ -75,9 +75,61 @@ function convertFile(){
         a.style.display = 'none';
         a.href = tmpURL;
         a.download = cupname.replace('.cup', '') + '.kml';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(tmpURL);
+        // document.body.appendChild(a);
+        // a.click();
+        // window.URL.revokeObjectURL(tmpURL);
+
+        //make the zip folder
+        var zip = new JSZip();
+        var kmzname = cupname.replace('.cup', '') + '.kmz';
+        var IconTP, IconWindsock, IconMtnPass, IconMtnTop, IconRepPt;
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if (this.readyState == 4 && this.status == 200){
+                IconTP = new Blob(xhr.response, {type: 'image/png'});
+            }
+        }
+        xhr.open ('GET', 'IconTP.png');
+        xhr.responseType = 'arraybuffer';
+        xhr.send(null);
+        
+
+        // $.get('/IconTP.png', function(data){
+        //     IconTP = new Blob([data], {type: 'image/png'});
+        //     report('IconTP imported');
+        // });
+        // $.get('IconWindsock.png', function(data, status){IconWindsock = new Blob([data], {type: 'image/png'});});
+        // $.get('IconMtnPass.png', function(data, status){IconMtnPass = new Blob([data], {type: 'image/png'});});
+        // $.get('IconMtnTop.png', function(data, status){IconMtnTop = new Blob([data], {type: 'image/png'});});
+        // $.get('IconRepPt.png', function(data, status){IconRepPt = new Blob([data], {type: 'image/png'});});
+        zip.folder(kmzname).file('IconTP.png', IconTP);
+        zip.folder(kmzname).file('IconWindsock.png', IconWindsock);
+        zip.folder(kmzname).file('IconMtnPass.png', IconMtnPass);
+        zip.folder(kmzname).file('IconMtnTop.png', IconMtnTop);
+        zip.folder(kmzname).file('IconRepPt.png', IconRepPt);
+        zip.folder(kmzname).file(a.download, blb);
+
+        /*
+        I'm stuck trying to import image data into blobs in memory in order to put the icons into the zip. Ideas:
+        1. Access the data with a HTTP GET request, e.g. jQuery $.get()
+            Problem: this isn't returning any data.
+            -8/7/19 trying with XmlHttpRequest, setting responseType = 'arraybuffer'
+        2. Put hidden <img> tags in the html with src set to the icon URL. Access these using getElementById().
+            Problems: can the raw data be accessed like this? Does a img element have a .files property?
+        */
+
+        var kmzBlob = new Blob([zip], {type: 'application/zip'});
+        //test whether pngs are being imported correctly
+        const urlb = window.URL.createObjectURL(IconTP);
+        const b = document.createElement('a');
+        b.style.display = 'none';
+        b.href = urlb;
+        b.download = "IconTP.png";
+        document.body.appendChild(b);
+        b.click();
+        window.URL.revokeObjectURL(urlb);
+
         
         report('File conversion successful! ' + wpCount + ' waypoints converted, ' + failCount + ' skipped.');
 
