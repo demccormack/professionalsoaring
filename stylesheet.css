@@ -2,15 +2,27 @@ html {
     color: white;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-image: url("bg.jpg");
+    background-position: center 0px;
+    background-repeat: no-repeat;
+    background-color: rgb(54, 54, 54);
     background-size: cover;
-    background-position: center center;
+    background-attachment: fixed;
 }
+
+body {height: 92%;}
+#container {
+    max-width: 65ch;
+    margin: 13px auto 13px auto;
+    padding: 1px 6ch 3ch 6ch;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 1ch;
+    min-height: 100%;
+}
+/* body, #container {min-height: calc(100% - 26px);} */
+
 
 h1, form {
     text-align: center;
 }
 
-#container {
-    max-width: 65ch;
-    margin: auto;
-}
+a {color: white;}
