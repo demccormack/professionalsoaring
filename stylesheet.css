@@ -1,5 +1,5 @@
 html {
-    color: white;
+    color: rgb(194, 194, 194);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-image: url("bg.jpg");
     background-position: center 0px;
@@ -20,9 +20,20 @@ body {height: 92%;}
 }
 /* body, #container {min-height: calc(100% - 26px);} */
 
-
 h1, form {
     text-align: center;
 }
 
-a {color: white;}
+a {color: rgb(194, 194, 194);}
+
+.linkTable {
+    border: none;
+}
+.linkTable td:last-child {
+    width: 50px;
+    text-align: right;
+}
+.linkTable td:first-child {
+    padding: 1ch 0ch 1ch 0ch;
+    text-align: justify;
+}
