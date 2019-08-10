@@ -11,12 +11,13 @@ html {
 
 body {height: 92%;}
 #container {
-    max-width: 65ch;
+    max-width: 75ch;
     margin: 13px auto 13px auto;
     padding: 1px 6ch 3ch 6ch;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 1ch;
     min-height: 100%;
+    text-align: justify;
 }
 /* body, #container {min-height: calc(100% - 26px);} */
 
