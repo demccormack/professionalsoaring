@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>Professional Soaring</title>
+    <link rel="stylesheet" href="../stylesheet.css">
+    <script type = "text/javascript" src = "../jszip.js"></script>
+    <script type = "text/javascript" src = "overlayweather.js"></script>
+</head>
+<body>
+    <div id="container">
+        <h1>Weather Overlays</h1>
+        <p>Upload an image from Dr Jack, South of the Rangitata River, and this script will
+            convert it into an overlay for Google Earth. This is useful for task planning 
+            and waypoint selection.
+        </p>
+        <form enctype="multipart/form-data" action="javascript:createOverlay()">
+            Upload your weather image: 
+            <input type="file" name="cupfile" id="fileinput">
+            <br><br>
+            <input type="submit">
+        </form>
+        <output id="output"></output>
+    </div>
+</body>
+</html>
