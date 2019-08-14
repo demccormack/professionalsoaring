@@ -21,6 +21,7 @@ function createOverlay(){
     kml.push('</LatLonBox>');
     kml.push('</GroundOverlay>');
     kml.push('</kml>');
+    
     //add new line characters
     for (var i = 0; i < kml.length; i++){
         kml[i] += '\n';
