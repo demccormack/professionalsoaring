@@ -12,13 +12,11 @@ function createOverlay(){
     kml.push('<href>files/' + imgName + '</href>');
     kml.push('<viewBoundScale>0.75</viewBoundScale>');
     kml.push('</Icon>');
-    kml.push('<LatLonBox>');
-    kml.push('<north>-42.53184169617862</north>');
-    kml.push('<south>-47.11614060282076</south>');
-    kml.push('<east>172.7438189963526</east>');
-    kml.push('<west>166.343352592303</west>');
-    kml.push('<rotation>-41.78198623657227</rotation>');
-    kml.push('</LatLonBox>');
+    kml.push('<gx:LatLonQuad>');
+    kml.push('<coordinates>');
+    kml.push('164.9970690761069,-44.99139418318028,0 169.7961221411751,-48.12341158631071,0 174.0290219131923,-44.64767786153754,0 169.3214752808527,-41.7092441448925,0');
+    kml.push('</coordinates>');
+    kml.push('</gx:LatLonQuad>');
     kml.push('</GroundOverlay>');
     kml.push('</kml>');
     
