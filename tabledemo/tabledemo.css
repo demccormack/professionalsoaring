@@ -1,0 +1,36 @@
+/*Styles all elements of the 'bitwise' class*/
+.bitwise{
+    border-collapse: collapse;
+    border: 1px solid blue;
+    margin: 2ch;
+    display: inline-block;
+}
+
+/*Styles table header cells belonging to the 'bitwise' class.
+Table header cells are already bold and centred by default.*/
+.bitwise th{
+    text-decoration: underline;
+    padding: 1ch;
+    border: 1px solid blue;
+}
+
+/*Styles table data cells belonging to the 'bitwise' class*/
+.bitwise td{
+    color: orange;
+    padding: 1ch;
+    border: 1px solid blue;
+}
+
+/*Styles td cells, belonging to the 'bitwise' class, which are 
+the 2nd child of their parent object.
+i.e. this will style the middle column of the tables.*/
+.bitwise td:nth-child(2){
+    
+}
+
+/*Styles odd-numbered rows only, giving the 'bitwise' table a striped look*/
+.bitwise tr:nth-child(even){
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*More at https://www.w3schools.com/Css/css_table.asp*/

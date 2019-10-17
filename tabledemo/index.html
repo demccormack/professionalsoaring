@@ -1,0 +1,65 @@
+<html>
+<head>
+    <title>Tables Demo</title>
+    <link rel="stylesheet" href="../stylesheet.css">
+    <link rel="stylesheet" href="tabledemo.css">
+</head>
+<body>
+    <div id="container">
+        <h1>Tables Demo</h1>
+
+        <p>
+        Putting my CSS in a separate file means I can use 
+        the same styles on every page of my website. The background 
+        image and shaded container on this page are showing here 
+        because I inserted a 'link' tag in the 'head' of this html 
+        page, to the CSS file I created for the other pages on my 
+        website.
+        </p>
+        <p>
+        The table styles are in another CSS file, <a href="tabledemo.css">tabledemo.css</a>, 
+        which I created just 
+        for this demo, and again linked in the 'head'. By assigning both tables to the 
+        'bitwise' class, I can ensure that all my tables related to bitwise operations 
+        will have the same style. Any changes I make to the CSS will propagate to 
+        every table in the class.
+        </p>
+        <p>
+        This can be done even more simply without defining a class and instead creating CSS 
+        styles for 'table', 'td' and 'th'. The drawback is that I wouldn't be able to 
+        define a second style of table.
+        </p>
+        
+        <table class="bitwise">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <th>AND</th><th>True</th><th>False</th>
+                </tr>
+                <tr>
+                    <th>True</th><td>True</td><td>False</td>
+                </tr>
+                <tr>
+                    <th>True</th><td>False</td><td>False</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="bitwise">
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <th>OR</th><th>True</th><th>False</th>
+                </tr>
+                <tr>
+                    <th>True</th><td>True</td><td>True</td>
+                </tr>
+                <tr>
+                    <th>True</th><td>True</td><td>False</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</body>
+</html>
