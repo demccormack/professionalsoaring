@@ -9,14 +9,21 @@
     <div id="container">
         <h1>Weather Overlays</h1>
         <p>Upload a weather map from 
-            <a target="_blank" rel="noopener noreferrer" href="http://rasp.nz/rasp/listForecasts.php?region=NZSOUTH_S">
-            Dr Jack, South of the Rangitata River</a>, and this script will
+            <a target="_blank" rel="noopener noreferrer" href="http://rasp.nz/rasp/">
+            DrJack RASP BLIPMAPs</a>, and this script will
             convert it into an overlay for Google Earth. This is useful for task planning 
             and waypoint selection.
         </p>
+        <p>This now works for both areas of the South Island. Select the area in the dropdown below!</p>
         <form enctype="multipart/form-data" action="javascript:createOverlay()">
             Upload your weather image: 
             <input type="file" name="cupfile" id="fileinput">
+            <br><br>
+            Image is from: 
+            <select id="maparea">
+                <option value="4">South Island, south of the Rangitata river</option>
+                <option value="3">South Island, north of the Rangitata river</option>
+            </select>
             <br><br>
             <input type="submit">
         </form>
